@@ -1,56 +1,29 @@
-// src/components/RequestPasswordReset.jsx
-import React, { useState } from "react";
-import axios from "axios";
+// src/components/PasswordResetConfirmation.jsx
+import React from "react";
 
-const RequestPasswordReset = () => {
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
-
-    const handleRequest = async (e) => {
-        e.preventDefault();
-        setMessage("");
-        setError("");
-
-        try {
-            const response = await axios.post(
-                "https://niyoghub-server.onrender.com/api/auth/request-password-reset",
-                { email }
-            );
-
-            setMessage(response.data.message);
-        } catch (err) {
-            setError(err.response?.data?.error || "Something went wrong. Please try again.");
-        }
-    };
-
+const PasswordResetConfirmation = () => {
     return (
         <div style={styles.container}>
-            <h2>Request Password Reset</h2>
-            <form onSubmit={handleRequest} style={styles.form}>
-                <label>Email:</label>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    style={styles.input}
-                />
-                <button type="submit" style={styles.button}>Send Reset Link</button>
-            </form>
-            {message && <p style={styles.success}>{message}</p>}
-            {error && <p style={styles.error}>{error}</p>}
+            <div style={styles.outro}>
+                <h2>Password Changed Successfully</h2>
+                <p>
+                    Your password has been successfully changed. You can now log in to the NiyogHub mobile or web app using your new password.
+                </p>
+                <p>
+                    Please make sure to keep your password secure and do not share it with anyone. If you encounter any issues logging in, feel free to contact our support team.
+                </p>
+                <p style={styles.info}>
+                    Go ahead and continue your farming journey with NiyogHub!
+                </p>
+            </div>
         </div>
     );
 };
 
 const styles = {
-    container: { padding: "20px", maxWidth: "400px", margin: "0 auto" },
-    form: { display: "flex", flexDirection: "column", gap: "10px" },
-    input: { padding: "8px", fontSize: "16px" },
-    button: { padding: "10px", fontSize: "16px", cursor: "pointer" },
-    success: { color: "green" },
-    error: { color: "red" },
+    container: { padding: "20px", maxWidth: "400px", margin: "0 auto", textAlign: "center" },
+    outro: { textAlign: "center" },
+    info: { color: "#333", fontStyle: "italic" }
 };
 
-export default RequestPasswordReset;
+export default PasswordResetConfirmation;
