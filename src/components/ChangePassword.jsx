@@ -1,76 +1,94 @@
-// src/components/ChangePassword.jsx
 import React, { useState } from "react";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./ChangePassword.css";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const location = useLocation();
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const resetToken = new URLSearchParams(location.search).get("token");
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    setMessage("");
-    setError("");
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
 
     try {
-      const response = await axios.post(
-        `https://niyoghub-server.onrender.com/api/auth/reset-password/${resetToken}`,
-        { newPassword, confirmNewPassword: confirmPassword }
+      const response = await fetch(
+        `https://your-backend-url/api/reset-password/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newPassword,
+            confirmNewPassword,
+          }),
+        }
       );
 
-      setMessage(response.data.message);
-      navigate("/"); // Redirect to the homepage after successful password change
-    } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong. Please try again.");
+      const result = await response.json();
+      console.log("Response status:", response.status); // Log status code
+      console.log("Response data:", result); // Log response data
+
+      setLoading(false);
+
+      if (response.status === 200) {
+        // Password reset successful
+        setSuccessMessage("Password reset successfully.");
+        console.log("Password reset successfully."); // Log success message
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else if (response.status === 400) {
+        // Handle specific errors returned from the backend
+        setErrorMessage(result.error || "Bad request. Please check the input.");
+        console.log("Error message:", result.error); // Log error message
+      } else {
+        // Handle other errors
+        setErrorMessage("Something went wrong. Please try again.");
+        console.log("Unexpected status code:", response.status); // Log unexpected status
+      }
+    } catch (error) {
+      setLoading(false);
+      setErrorMessage("An unexpected error occurred. Please try again.");
+      console.log("Error during password reset:", error); // Log exception
     }
   };
 
   return (
-    <div style={styles.container}>
+    <div className="change-password-container">
       <h2>Change Password</h2>
-      <form onSubmit={handleChangePassword} style={styles.form}>
+      <form onSubmit={handleChangePassword}>
         <label>New Password:</label>
         <input
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           required
-          style={styles.input}
         />
         <label>Confirm Password:</label>
         <input
           type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
           required
-          style={styles.input}
         />
-        <button type="submit" style={styles.button}>Change Password</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Changing..." : "Change Password"}
+        </button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+        {successMessage && <p className="success">{successMessage}</p>}
       </form>
-      {message && <p style={styles.success}>{message}</p>}
-      {error && <p style={styles.error}>{error}</p>}
     </div>
   );
-};
-
-const styles = {
-  container: { padding: "20px", maxWidth: "400px", margin: "0 auto" },
-  form: { display: "flex", flexDirection: "column", gap: "10px" },
-  input: { padding: "8px", fontSize: "16px" },
-  button: { padding: "10px", fontSize: "16px", cursor: "pointer" },
-  success: { color: "green" },
-  error: { color: "red" },
 };
 
 export default ChangePassword;
