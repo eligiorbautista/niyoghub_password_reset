@@ -1,4 +1,3 @@
-// src/components/PasswordResetConfirmation.jsx
 import React from "react";
 
 const PasswordResetConfirmation = () => {
