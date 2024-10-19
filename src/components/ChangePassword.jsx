@@ -21,7 +21,7 @@ const ChangePassword = () => {
 
     try {
       const response = await fetch(
-        `https://your-backend-url/api/reset-password/${token}`,
+        `https://niyoghub-server.onrender.com/api/reset-password/${token}`,
         {
           method: "POST",
           headers: {
