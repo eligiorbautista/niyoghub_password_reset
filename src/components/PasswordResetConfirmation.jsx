@@ -14,7 +14,7 @@ const PasswordResetConfirmation = () => {
                 <p style={styles.info}>
                     Go ahead and continue your farming journey with NiyogHub!
                 </p>
-               
+
             </div>
         </div>
     );
@@ -50,7 +50,7 @@ const styles = {
         fontStyle: "italic",
         marginBottom: "20px",
     },
- 
+
 };
 
 export default PasswordResetConfirmation;
