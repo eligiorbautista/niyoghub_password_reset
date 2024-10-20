@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./ChangePassword.css";
+import "../ChangePassword.css";
 
 const ChangePassword = () => {
     const [newPassword, setNewPassword] = useState("");
@@ -35,29 +35,22 @@ const ChangePassword = () => {
             );
 
             const result = await response.json();
-            console.log("Response status:", response.status);
-            console.log("Response data:", result);
 
             setLoading(false);
 
             if (response.status === 200) {
                 setSuccessMessage("Password reset successfully.");
-                console.log("Password reset successfully.");
                 setTimeout(() => {
                     navigate("/");
                 }, 2000);
             } else if (response.status === 400) {
                 setErrorMessage(result.error || "Bad request. Please check the input.");
-                console.log("Error message:", result.error);
             } else {
-                // Handle other errors
                 setErrorMessage("Something went wrong. Please try again.");
-                console.log("Unexpected status code:", response.status);
             }
         } catch (error) {
             setLoading(false);
             setErrorMessage("An unexpected error occurred. Please try again.");
-            console.log("Error during password reset:", error);
         }
     };
 
@@ -65,6 +58,7 @@ const ChangePassword = () => {
         <div className="change-password-container">
             <h2>Change Password</h2>
             <form onSubmit={handleChangePassword}>
+
                 <label>New Password:</label>
                 <input
                     type="password"
@@ -82,8 +76,18 @@ const ChangePassword = () => {
                 <button type="submit" disabled={loading}>
                     {loading ? "Changing..." : "Change Password"}
                 </button>
+
                 {errorMessage && <p className="error">{errorMessage}</p>}
                 {successMessage && <p className="success">{successMessage}</p>}
+                <div className="password-requirements">
+                    <p>Passwords must contain:</p>
+                    <ul>
+                        <li>At least 6 characters</li>
+                        <li>At least 1 uppercase letter (A-Z)</li>
+                        <li>At least 1 lowercase letter (a-z)</li>
+                        <li>At least 1 number (0-9)</li>
+                    </ul>
+                </div>
             </form>
         </div>
     );
