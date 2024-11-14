@@ -75,7 +75,7 @@ const ChangePassword = () => {
           <div className="change-password-container mt-20">
             <h1 className="text-xl font-bold text-center my-4">Reset Password</h1>
             <p className="text-center text-gray-600 text-sm mb-5">
-              Please enter your current password along with your desired new password to reset your account password.
+              Please enter your desired new password to reset your account password.
             </p>
             <form onSubmit={handleChangePassword} className="w-[100%]">
               <input
