@@ -22,7 +22,7 @@ const ChangePassword = () => {
 
         try {
             const response = await fetch(
-                `https://niyoghub-server.onrender.com/api/auth/reset-password/${token}`,
+                `https://niyoghub-server-4c3u.onrender.com/api/auth/reset-password/${token}`,
                 {
                     method: "POST",
                     headers: {
